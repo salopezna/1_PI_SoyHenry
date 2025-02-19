@@ -18,11 +18,7 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-# 
-#sys.path.append('/Users/usuario/Documents/DATA_SCIENCE/M7_LABs_Proyectos_individuales/mvp_pi1')
-#sys.path.insert(1, '/Users/usuario/Documents/DATA_SCIENCE/M7_LABs_Proyectos_individuales/mvp_pi1/src') 
-
-# Importa tus funciones de servicio
+# Importamos funciones de servicio
 from src.services import (
     cantidad_filmaciones_mes,
     cantidad_filmaciones_dia,
@@ -32,13 +28,13 @@ from src.services import (
     exito_director
 )
 
-# Crea la instancia de FastAPI
+# Creamos la instancia de FastAPI
 app = FastAPI()
 
 # Cargamos los csv data_movies, data_cast y data_crew
-data_movies = pd.read_csv('/Users/usuario/Documents/DATA_SCIENCE/M7_LABs_Proyectos_individuales/mvp_pi1/transformados_processed/data_movies.csv', low_memory=False)
-data_cast = pd.read_csv('/Users/usuario/Documents/DATA_SCIENCE/M7_LABs_Proyectos_individuales/mvp_pi1/transformados_processed/data_cast.csv', low_memory=False)
-data_crew = pd.read_csv('/Users/usuario/Documents/DATA_SCIENCE/M7_LABs_Proyectos_individuales/mvp_pi1/transformados_processed/data_crew.csv', low_memory=False)
+data_movies = pd.read_csv('transformados_processed/data_movies.parquet', low_memory=False)
+data_cast = pd.read_csv('transformados_processed/data_cast.parquet', low_memory=False)
+data_crew = pd.read_csv('transformados_processed/data_crew.parquet', low_memory=False)
 
 @app.get("/")
 def root():
@@ -50,7 +46,7 @@ def get_cantidad_filmaciones_mes(mes: str):
     Endpoint para consultar cuántas películas se estrenaron en el mes dado (ej: 'enero' o '2').
     """
     resultado = cantidad_filmaciones_mes(mes, data_movies)
-    # Puedes retornar un dict para que sea JSON:
+    # Podemos retornar un dict para que sea JSON:
     return {"resultado": resultado}
 
 @app.get("/cantidad_filmaciones_dia/{dia}")
@@ -92,25 +88,3 @@ def get_exito_director(nombre_director: str):
     """
     resultado = exito_director(nombre_director, data_crew, data_movies)
     return {"resultado": resultado}
-
-
-'''
-cant_fil_dia=cantidad_filmaciones_dia("martes",data_movies)
-print(cant_fil_dia)
-cant_fil_dia=cantidad_filmaciones_dia(1,data_movies)
-print(cant_fil_dia)
-cant_fil_mes=cantidad_filmaciones_mes("febrero",data_movies)
-print(cant_fil_mes)
-cant_fil_mes=cantidad_filmaciones_mes(2,data_movies)
-print(cant_fil_mes)
-score_titulo = score_titulo("Moonlight and Valentino",data_movies)
-print(score_titulo)
-votos_titulo = votos_titulo("Moonlight and Valentino",data_movies)
-print(votos_titulo)
-exito_del_actor = exito_actor("Walter Matthau",data_cast,data_movies)
-print(exito_del_actor)
-exito_del_director = exito_director("Walter Matthau",data_crew,data_movies)
-print(exito_del_director)
-'''
-
-
